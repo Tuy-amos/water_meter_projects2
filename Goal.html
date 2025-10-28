@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Your Target Goal - Advanced UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a192f;
+            background-image: radial-gradient(circle at top right, rgba(79, 70, 229, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(109, 40, 217, 0.15) 0%, transparent 60%);
+            min-height: 100vh;
+        }
+
+        .form-input-custom {
+            background-color: #1f2937;
+            color: #f3f4f6;
+            border-color: #374151;
+            transition: all 0.3s ease;
+        }
+
+        .form-input-custom:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 1px #6366f1, 0 0 0 4px rgba(99, 102, 241, 0.2);
+            background-color: #111827;
+        }
+        
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .animate-card-load {
+            animation: fadeInSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .radio-label {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #374151;
+            background-color: #1f2937;
+            color: #d1d5db;
+        }
+        .radio-label:hover {
+            border-color: #4f46e5;
+        }
+        .radio-input:checked + .radio-label {
+            background-color: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div class="w-full max-w-xl bg-gray-800 p-8 md:p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-gray-700 animate-card-load">
+        
+        <h1 class="text-4xl font-extrabold text-indigo-400 mb-2 text-center">Define a New Target</h1>
+        
+        <form action="BackendforGoal.php" method="POST" class="space-y-6">
+
+            <div>
+                <label for="goal_name" class="block text-sm font-medium text-gray-300 mb-1">Goal Name</label>
+                <input
+                    type="text"
+                    id="goal_name"
+                    name="goal_name"
+                    required
+                    placeholder="....."
+                    class="form-input-custom mt-1 block w-full px-4 py-3 rounded-xl shadow-lg focus:outline-none"
+                >
+            </div>
+            
+            <div>
+                <label for="target_amount" class="block text-sm font-medium text-gray-300 mb-1">Target Amount (in Liters)</label>
+                <div class="relative mt-1 rounded-xl shadow-lg">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <span class="text-indigo-400 font-bold">L</span>
+                    </div>
+                    <input
+                        type="number"
+                        id="target_amount"
+                        name="target_amount"
+                        required
+                        min="1"
+                        step="0.01"
+                        placeholder="...."
+                        class="form-input-custom block w-full pl-14 pr-4 py-3 rounded-xl focus:outline-none"
+                    >
+                </div>
+            </div>
+            
+            <div class="pt-2">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Period</label>
+                <div class="mt-1 flex flex-wrap gap-4 justify-between">
+                    
+                    <input type="radio" name="goal_period" value="Day" required id="period-day" class="hidden radio-input">
+                    <label for="period-day" class="radio-label flex items-center justify-center space-x-2 p-4 rounded-xl cursor-pointer hover:bg-gray-700/50 flex-grow text-center">
+                        <span class="font-bold text-base">Daily</span>
+                    </label>
+
+                    <input type="radio" name="goal_period" value="Week" id="period-week" class="hidden radio-input">
+                    <label for="period-week" class="radio-label flex items-center justify-center space-x-2 p-4 rounded-xl cursor-pointer hover:bg-gray-700/50 flex-grow text-center">
+                        <span class="font-bold text-base">Weekly</span>
+                    </label>
+
+                    <input type="radio" name="goal_period" value="Month" id="period-month" class="hidden radio-input" checked>
+                    <label for="period-month" class="radio-label flex items-center justify-center space-x-2 p-4 rounded-xl cursor-pointer hover:bg-gray-700/50 flex-grow text-center">
+                        <span class="font-bold text-base">Monthly</span>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label for="target_date" class="block text-sm font-medium text-gray-300 mb-1">Target Due Date</label>
+                <input
+                    type="date"
+                    id="target_date"
+                    name="target_date"
+                    required
+                    class="form-input-custom mt-1 block w-full px-4 py-3 rounded-xl shadow-lg focus:outline-none"
+                >
+            </div>
+
+            <div class="pt-6">
+                <button
+                    type="submit"
+                    class="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-indigo-500/50 shadow-xl text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-800 transition duration-200 transform hover:scale-[1.01] active:scale-[0.98] active:shadow-none"
+                >
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" id="loading-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Create & Save Goal</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

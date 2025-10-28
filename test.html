@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Water Meter Data Sender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="app" class="w-full max-w-lg bg-white shadow-2xl rounded-xl p-6 md:p-10 border border-gray-100">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">Simulate Water Meter Data</h1>
+        <p class="text-sm text-gray-500 mb-8 text-center">
+            Send sensor values as a POST JSON request to the server.
+        </p>
+
+        <form id="dataForm" class="space-y-4">
+            <div class="flex flex-col">
+                <label for="temperature" class="text-sm font-medium text-gray-700 mb-1">Temperature (C)</label>
+                <input type="number" step="0.01" id="temperature" value="25.5" required
+                       class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+            </div>
+            <div class="flex flex-col">
+                <label for="tds_value" class="text-sm font-medium text-gray-700 mb-1">TDS Value (ppm)</label>
+                <input type="number" step="1" id="tds_value" value="150" required
+                       class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+            </div>
+            <div class="flex flex-col">
+                <label for="turbidity_value" class="text-sm font-medium text-gray-700 mb-1">Turbidity Value (NTU)</label>
+                <input type="number" step="0.01" id="turbidity_value" value="2.3" required
+                       class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="flow_rate" class="text-sm font-medium text-gray-700 mb-1">Flow Rate (L/min)</label>
+                <input type="number" step="0.01" id="flow_rate" value="1.25" required
+                       class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="total_volume" class="text-sm font-medium text-gray-700 mb-1">Total Volume (L)</label>
+                <input type="number" step="0.1" id="total_volume" value="105.8" required
+                       class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+            </div>
+
+            <button type="submit" id="sendButton" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 mt-6 rounded-lg shadow-md transition duration-200 disabled:opacity-50">
+                Send Data to Server
+            </button>
+        </form>
+        <div id="statusMessage" class="mt-6 p-4 rounded-lg text-sm hidden" role="alert"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('dataForm');
+            const statusMessage = document.getElementById('statusMessage');
+            const sendButton = document.getElementById('sendButton');
+
+            const SERVER_URL = 'Backend.php'; 
+            const MAX_RETRIES = 3;
+
+            /**
+             * Helper function to perform the POST request with exponential backoff.
+             * @param {string} url - The server endpoint URL.
+             * @param {Object} data - The JSON data payload.
+             * @param {number} retries - Current retry attempt count.
+             */
+            async function postDataWithRetry(url, data, retries = 0) {
+                const payload = JSON.stringify(data);
+                
+                if (retries >= MAX_RETRIES) {
+                    return { success: false, message: `Failed to connect to server after ${MAX_RETRIES} attempts.` };
+                }
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: payload,
+                    });
+
+                    const responseText = await response.text();
+                    return { success: response.ok, message: responseText };
+
+                } catch (error) {
+                    const delay = Math.pow(2, retries) * 1000; 
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return postDataWithRetry(url, data, retries + 1);
+                }
+            }
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                sendButton.disabled = true;
+                sendButton.textContent = 'Sending...';
+                statusMessage.classList.add('hidden');
+                statusMessage.textContent = '';
+                
+                const data = {
+                    temperature: parseFloat(document.getElementById('temperature').value),
+                    tds_value: parseFloat(document.getElementById('tds_value').value),
+                    turbidity_value: parseFloat(document.getElementById('turbidity_value').value),
+                    flow_rate: parseFloat(document.getElementById('flow_rate').value),
+                    total_volume: parseFloat(document.getElementById('total_volume').value),
+                };
+                const result = await postDataWithRetry(SERVER_URL, data);
+                statusMessage.classList.remove('hidden');
+                
+                if (result.success) {
+                    statusMessage.classList.remove('bg-red-100', 'text-red-800');
+                    statusMessage.classList.add('bg-green-100', 'text-green-800');
+                    statusMessage.innerHTML = `
+                        <p class="font-bold">Success!</p>
+                        <p>Server Response: ${result.message}</p>
+                    `;
+                } else {
+                    statusMessage.classList.remove('bg-green-100', 'text-green-800');
+                    statusMessage.classList.add('bg-red-100', 'text-red-800');
+                    statusMessage.innerHTML = `
+                        <p class="font-bold">Error!</p>
+                        <p>${result.message}</p>
+                        <p class="mt-2">Ensure the PHP file is running at: <code>${SERVER_URL}</code></p>
+                    `;
+                }
+                sendButton.disabled = false;
+                sendButton.textContent = 'Send Data to Server';
+            });
+        });
+    </script>
+</body>
+</html>
