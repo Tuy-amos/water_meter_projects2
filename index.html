@@ -423,7 +423,7 @@
                         </p>
                     </div>
                     <div class="purpose-card p-8 rounded-2xl shadow-md flex flex-col items-center text-center">
-                        <div class="red-500 rounded-full mb-6 text-white">
+                        <div class="-red-500 rounded-full mb-6 text-white">
                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4.195a9 9 0 1113.876 0M4.14 4.14a8.995 8.995 0 0115.72 0" />
                                            </svg>
@@ -633,65 +633,6 @@
             </div>
         </section>
         
-        <div class="max-w-4xl mx-auto py-8">
-            <h1 class="text-4xl font-extrabold text-center text-blue-700 mb-4">Documentation Work Progress</h1>
-            <p class="text-center text-gray-600 mb-12">A clear timeline showing the five main steps we followed to build our project .</p>
-    
-            <div class="tree-container">
-    
-                
-                <div class="tree-node node-left">
-                    <div class="node-content w-full">
-                        <h2 class="text-xl font-bold text-blue-600 mb-1">Step 1: Get Everything </h2>
-                        <p class="text-sm text-gray-700">
-                            We set up the microcontroller(ESP 32) and installed all the necessary software. We also set up the XAMPP server on the computer to be ready to store our data.
-                        </p>
-                    </div>
-                </div>
-    
-                <div class="tree-node node-right">
-                    <div class="node-content w-full">
-                        <h2 class="text-xl font-bold text-blue-600 mb-1">Step 2: Connection between the Sensors</h2>
-                        <p class="text-sm text-gray-700">
-                            We connected the Water Flow, Temperature, and Turbidity sensors. Then, we wrote the first part of the Arduino code to make sure they read the water data correctly and in real-time.
-                        </p>
-                    </div>
-                </div>
-    
-                <div class="tree-node node-left">
-                    <div class="node-content w-full">
-                        <h2 class="text-xl font-bold text-blue-600 mb-1">Step 3: Program and Control Parts</h2>
-                        <p class="text-sm text-gray-700">
-                            We wired and coded the Water Pump and Solenoid Valve. The Arduino code now includes the main logic to automatically control the water flow based on the quality readings from the sensors.
-                        </p>
-                    </div>
-                </div>
-    
-                
-                <div class="tree-node node-right">
-                    <div class="node-content w-full">
-                        <h2 class="text-xl font-bold text-blue-600 mb-1">Step 4: Save and Manage Data</h2>
-                        <p class="text-sm text-gray-700">
-                            We developed the backend scripts using PHP. This code handles the sensor data coming from the microcontroller, saves it into a database, and stores all the current and past readings on the XAMPP server.
-                        </p>
-                    </div>
-                </div>
-    
-               
-                <div class="tree-node node-left">
-                    <div class="node-content w-full">
-                        <h2 class="text-xl font-bold text-blue-600 mb-1">Step 5: Screen and Test of our project </h2>
-                        <p class="text-sm text-gray-700">
-                            We designed the monitoring dashboard using HTML so users can see the data easily. Finally, we linked all the parts together and did a complete test and setup (calibration) of the whole system.
-                        </p>
-                    </div>
-                </div>
-    
-            </div>
-        </div>
-    
-
-
 
 
         <div class="section-separator fade-in"></div>
@@ -982,7 +923,7 @@ void sendToServer(float flowRate,float totalLiters,float Turbidity,float T,float
                         Leading the future of water management with real-time data and conservation technology.
                     </p>
                     <div class="flex space-x-4 pt-2">
-                        <a href="#" class="social-icon text-white hover:text-blue-400 transition-all duration-300 transform"><i class="fab fa-github text-lg"></i>smart water meter</a>
+                        <a href="#" class="social-icon text-white hover:text-blue-400 transition-all duration-300 transform">smart water meter</a>
                        
                     </div>
                 </div>
